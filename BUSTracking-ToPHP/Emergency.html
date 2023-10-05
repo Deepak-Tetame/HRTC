@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Alert</title>
+</head>
+
+<body>
+
+    <h1>Emergency Alert</h1>
+
+    <button id="alertButton">Send Emergency Alert</button>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const alertButton = document.getElementById("alertButton");
+
+            alertButton.addEventListener("click", () => {
+                sendEmergencyAlert();
+            });
+
+            function sendEmergencyAlert() {
+                
+                if ("geolocation" in navigator) {
+                    navigator.geolocation.getCurrentPosition((position) => {
+                        const latitude = position.coords.latitude;
+                        const longitude = position.coords.longitude;
+
+                        
+                        const message = `Kaka vachva.... bus khadyat gelie bajula suyash baslela window madhe adaklay ardha baher lataktoy he bagha he location ahe - https://www.google.com/maps?q=${latitude},${longitude}`;
+
+                        
+                        const accountSid = 'ACefe92bded7b42cc8a86229b1b4fb5fe1';
+                        const authToken = '2e40d83f7e5f41c7b9c3d1a87563871c';
+                        const fromNumber = '+12565738173';
+                        const toNumber = '+918928807551';
+
+                       
+                        fetch('/send-sms', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                message,
+                                fromNumber,
+                                toNumber,
+                            }),
+                        })
+                            .then((response) => response.json())
+                            .then((data) => {
+                                console.log("Emergency alert sent:", data);
+                                alert("Emergency alert sent!");
+                            })
+                            .catch((error) => {
+                                console.error("Error sending emergency alert:", error);
+                                alert("Error sending emergency alert.");
+                            });
+                    });
+                } else {
+                    alert("Geolocation is not supported in this browser.");
+                }
+            }
+        });
+    </script>
+
+</body>
+
+</html>
